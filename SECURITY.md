@@ -40,10 +40,10 @@ These are enabled/maintained for this project (see
 
 ## Supported versions
 
-The project is pre-1.0. Only the latest `main` receives security fixes until a
-stable release line is established.
+The project is pre-1.0. Security fixes target the latest release and `main`.
 
-| Version | Supported |
-| ------- | --------- |
-| `main`  | ✅        |
-| < 0.1   | ❌        |
+| Version        | Supported |
+| -------------- | --------- |
+| `0.1.x` latest | ✅        |
+| `main`         | ✅        |
+| < 0.1          | ❌        |

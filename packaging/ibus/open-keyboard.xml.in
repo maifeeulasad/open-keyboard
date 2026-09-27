@@ -8,7 +8,7 @@
   <name>org.freedesktop.IBus.OpenKeyboard</name>
   <description>open-keyboard Bengali input method</description>
   <exec>@LIBEXEC@/okb-ibus-engine --ibus</exec>
-  <version>0.0.1</version>
+  <version>0.1.0</version>
   <author>Maifee Ul Asad</author>
   <license>GPL-3.0-only</license>
   <homepage>https://github.com/maifeeulasad/open-keyboard</homepage>

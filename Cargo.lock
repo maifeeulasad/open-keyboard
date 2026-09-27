@@ -382,18 +382,18 @@ dependencies = [
 
 [[package]]
 name = "okb-cli"
-version = "0.0.1"
+version = "0.1.0"
 dependencies = [
  "okb-engine",
 ]
 
 [[package]]
 name = "okb-engine"
-version = "0.0.1"
+version = "0.1.0"
 
 [[package]]
 name = "okb-ibus"
-version = "0.0.1"
+version = "0.1.0"
 dependencies = [
  "okb-ime",
  "zbus",
@@ -401,7 +401,7 @@ dependencies = [
 
 [[package]]
 name = "okb-ime"
-version = "0.0.1"
+version = "0.1.0"
 dependencies = [
  "okb-engine",
 ]
