@@ -18,7 +18,7 @@ version = 2
 # The project is GPL-3.0-only. Only permissive licences that are compatible with
 # distributing a GPLv3 binary are allowed for dependencies.
 allow = [
-    "GPL-3.0",
+    "GPL-3.0-only",
     "Apache-2.0",
     "MIT",
     "BSD-2-Clause",
