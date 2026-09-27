@@ -27,7 +27,7 @@ Legend: ✅ done · 🚧 in progress · ⏳ planned
   (keeps the scheme editable without recompiling).
 - ⏳ Benchmarks; confirm per-keystroke latency budget (< 1 ms for word-length input).
 
-## Phase 2 — IBus integration (Ubuntu default) 🚧
+## Phase 2 — IBus integration (Ubuntu default) ✅ (core)
 
 - ✅ `okb-ime`: framework-agnostic input-session state machine (preedit buffer +
   commit/passthrough policy), fully unit-tested. Shared by IBus and (later) Fcitx5.
@@ -37,12 +37,12 @@ Legend: ✅ done · 🚧 in progress · ⏳ planned
   - ✅ compiles and passes `clippy -D warnings`.
 - ✅ Packaging: IBus component descriptor, `install.sh`/`uninstall.sh`, `Makefile`,
   and [setup guide](development/ibus-setup.md).
-- 🚧 **Live end-to-end validation on a running Ubuntu/GNOME session** (needs a desktop
-  session; not available in CI/sandbox). First install is a bring-up — see the setup
-  guide's status note.
+- ✅ **Live end-to-end validation on Ubuntu/GNOME (2026-09-27)** — confirmed typing
+  Bengali into real applications.
+- ✅ Preedit underline styling (composing text is underlined until it commits).
 - ⏳ `.deb` packaging for a one-command install.
-- ⏳ Test matrix: GNOME on Wayland and X11; browser, editor, terminal.
-- ⏳ Preedit underline styling (the `ibus_text` attribute plumbing already exists).
+- ⏳ Test matrix: other distros/desktops (KDE), Wayland vs X11; browser, editor,
+  terminal. (Community/device testing in progress.)
 
 ## Phase 3 — Fcitx5 integration ⏳
 
@@ -71,9 +71,7 @@ Legend: ✅ done · 🚧 in progress · ⏳ planned
 
 ## Immediate next steps
 
-1. **Live bring-up of the IBus engine** on Ubuntu/GNOME: `make install`, enable the
-   input source, and type — following [ibus-setup](development/ibus-setup.md). Report
-   anything off so we can iterate to a confirmed end-to-end working state.
-2. Maintainer: flip the GitHub security settings listed in Phase 0.
-3. Push and confirm CI is green.
-4. Then: preedit underline + `.deb` packaging, or start Phase 1 scheme/fuzzing work.
+1. Maintainer: flip the GitHub security settings listed in Phase 0.
+2. Push and confirm CI is green; test across devices/distros and file bug reports.
+3. Then choose: `.deb` packaging (easy install), Phase 3 (Fcitx5, reuses `okb-ime`),
+   or Phase 1 (grow the scheme + fuzzing).

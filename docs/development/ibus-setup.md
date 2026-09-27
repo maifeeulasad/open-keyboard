@@ -3,20 +3,21 @@
 This guide covers building, installing, enabling, and testing the open-keyboard
 IBus engine (`okb-ibus`) on Ubuntu/GNOME.
 
-> ## Validation status
+> ## Status
 >
-> The engine's **pure logic is unit-tested** and the whole crate **builds and passes
-> `clippy -D warnings`**:
+> **Confirmed working end to end on Ubuntu/GNOME (IBus) as of 2026-09-27** — typing
+> phonetic Latin commits Bengali into real applications. Composing text is shown
+> underlined and commits on space/enter.
+>
+> In addition, the engine's pure logic is unit-tested and the crate passes
+> `clippy -D warnings`:
 > - keyval/modifier → key mapping ([`keymap`](../../crates/ibus/src/keymap.rs)),
 > - the `IBusText` D-Bus wire format, pinned by signature tests
 >   ([`ibus_text`](../../crates/ibus/src/ibus_text.rs)),
 > - the shared session policy ([`okb-ime`](../../crates/ime/src/session.rs)).
 >
-> The **live end-to-end path** (daemon → `ProcessKeyEvent` → committed text in a real
-> app) has **not yet been validated on a running IBus session** — that needs a desktop
-> session, which CI and the development sandbox don't have. Please treat the first
-> install as a bring-up: follow the debugging steps below and report anything off, and
-> we'll iterate. This note will be removed once it's confirmed working end to end.
+> Broader testing across distros, desktops (KDE, etc.), and Wayland/X11 is ongoing;
+> please [report bugs](../../CONTRIBUTING.md#reporting-bugs) if you hit any.
 
 ## Prerequisites
 

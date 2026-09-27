@@ -64,7 +64,7 @@ Android/IME, Wayland) without change.
 | `okb-engine` | **implemented** | Rust (std-only) | Schemes, sounds, contextual transliteration. The linguistic brain. |
 | `okb-ime` | **implemented** | Rust (std-only) | Framework-agnostic input-session logic: preedit buffer + commit/passthrough policy, shared by all adapters. |
 | `okb-cli` | **implemented** | Rust | Command-line harness to exercise the engine before IME integration exists. |
-| `okb-ibus` | **implemented** (bring-up) | Rust (zbus) | IBus engine: pure-Rust D-Bus adapter driving `okb-ime`. Logic unit-tested; live end-to-end validation pending (see [ibus-setup](../development/ibus-setup.md)). |
+| `okb-ibus` | **implemented** | Rust (zbus) | IBus engine: pure-Rust D-Bus adapter driving `okb-ime`. Confirmed working end-to-end on Ubuntu/GNOME (see [ibus-setup](../development/ibus-setup.md)). |
 | `okb-fcitx5` | planned (Phase 3) | Rust + C++ FFI | Fcitx5 addon wrapping the engine (reuses `okb-ime`). |
 | `okb-ui` | planned (Phase 4) | Rust (GTK4) | Preferences window and candidate/suggestion popup. |
 | `okb-ffi` | planned (as needed) | Rust (C ABI) | Stable C ABI over the engine for the C++ Fcitx5 shim. |

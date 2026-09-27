@@ -12,9 +12,9 @@ Type `amar sonar bangla`, get `আমার সোনার বাংলা` —
 [![unsafe: forbidden](https://img.shields.io/badge/unsafe-forbidden-success.svg)](docs/architecture/security.md)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](LICENSE)
 
-> ⚠️ **Early development.** The linguistic core and a CLI harness work today; the
-> system-wide IME integration (IBus, then Fcitx5) is next. See the
-> [roadmap](docs/roadmap.md).
+> 🧪 **Early but working.** The IBus engine types Bengali system-wide on Ubuntu/GNOME
+> today (confirmed end-to-end). Fcitx5, a settings UI, and smart suggestions are next.
+> See the [roadmap](docs/roadmap.md).
 
 ## Why
 
@@ -37,6 +37,18 @@ echo "ami bangla likhi" | cargo run -q -p okb-cli
 ```
 
 What to type is documented in the [phonetic scheme](docs/design/phonetic-scheme.md).
+
+### Type Bengali system-wide (Ubuntu/GNOME)
+
+Install the IBus engine so you can type Bengali in any app:
+
+```bash
+make install
+```
+
+Then enable it: GNOME Settings → Keyboard → Input Sources → **+** → Bengali →
+"Bengali (open-keyboard, phonetic)", and switch with **Super + Space**. Full steps and
+troubleshooting: [IBus setup guide](docs/development/ibus-setup.md).
 
 ## How it's built
 
