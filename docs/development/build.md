@@ -61,10 +61,14 @@ See [the phonetic scheme](../design/phonetic-scheme.md) for what to type.
 open-keyboard/
 ├── Cargo.toml            # workspace
 ├── crates/
-│   ├── engine/           # okb-engine  — pure core (std-only)
-│   └── cli/              # okb-cli     — dev/test harness (binary: okb)
+│   ├── engine/           # okb-engine  — pure transliteration core (std-only)
+│   ├── ime/              # okb-ime     — input-session state machine (std-only)
+│   ├── cli/              # okb-cli     — dev/test harness (binary: okb)
+│   └── ibus/             # okb-ibus    — IBus D-Bus engine (binary: okb-ibus-engine)
+├── packaging/            # IBus component + install/uninstall scripts
 ├── docs/                 # all documentation (source of truth)
 ├── .github/              # CI, CodeQL, security-audit, Dependabot
+├── Makefile              # convenience wrapper (build/test/lint/install)
 ├── deny.toml             # cargo-deny config
 ├── rustfmt.toml
 ├── SECURITY.md

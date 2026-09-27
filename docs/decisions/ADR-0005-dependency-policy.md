@@ -30,9 +30,10 @@ Adopt a strict minimal-dependency policy:
 | Crate | Dependency | Justification |
 | ----- | ---------- | ------------- |
 | `okb-engine` | *(none)* | Std-only by policy. |
+| `okb-ime` | `okb-engine` (workspace) | Internal; no external deps. |
 | `okb-cli` | `okb-engine` (workspace) | Internal; no external deps. |
+| `okb-ibus` | `okb-ime` (workspace), `zbus` | `zbus` is the D-Bus transport for the IBus protocol. It is **pure Rust** — chosen over libibus/GObject bindings specifically to avoid C FFI and keep `#![forbid(unsafe_code)]` intact in the keystroke path. It is quarantined to this crate; the engine and session stay dependency-free. |
 | `okb-ui` (planned) | `gtk4` (gtk-rs) | Required for the native UI ([ADR-0003](ADR-0003-ui-stack-gtk4.md)); quarantined to this crate. |
-| `okb-ibus` (planned) | a D-Bus crate (TBD) | Required to speak the IBus protocol; smallest viable option to be chosen and recorded here. |
 
 Update this table in the same change that adds a dependency.
 

@@ -17,6 +17,7 @@ serve as our planning and tracking system.
 | | [design/phonetic-scheme.md](design/phonetic-scheme.md) | The clean-room English→Bengali romanization scheme. |
 | **Roadmap** | [roadmap.md](roadmap.md) | Phased plan and current status (our task tracker). |
 | **Development** | [development/build.md](development/build.md) | How to build, test, run, and lint. |
+| | [development/ibus-setup.md](development/ibus-setup.md) | Install, enable, and test the IBus engine on Ubuntu. |
 | | [development/project-management.md](development/project-management.md) | How we run the project without issues/branches. |
 
 ## Conventions

@@ -27,12 +27,22 @@ Legend: ✅ done · 🚧 in progress · ⏳ planned
   (keeps the scheme editable without recompiling).
 - ⏳ Benchmarks; confirm per-keystroke latency budget (< 1 ms for word-length input).
 
-## Phase 2 — IBus integration (Ubuntu default) ⏳
+## Phase 2 — IBus integration (Ubuntu default) 🚧
 
-- ⏳ `okb-ibus`: register an IBus engine component, handle key events, drive preedit
-  and commit via the shared engine.
-- ⏳ Packaging: `.deb` + install docs so it works on a stock Ubuntu install.
-- ⏳ Manual test matrix (GNOME on Wayland and X11; browser, editor, terminal).
+- ✅ `okb-ime`: framework-agnostic input-session state machine (preedit buffer +
+  commit/passthrough policy), fully unit-tested. Shared by IBus and (later) Fcitx5.
+- ✅ `okb-ibus`: pure-Rust (zbus) IBus Engine + Factory driving `okb-ime`.
+  - ✅ keyval/modifier → key mapping (unit-tested).
+  - ✅ `IBusText` D-Bus wire format, pinned by signature tests.
+  - ✅ compiles and passes `clippy -D warnings`.
+- ✅ Packaging: IBus component descriptor, `install.sh`/`uninstall.sh`, `Makefile`,
+  and [setup guide](development/ibus-setup.md).
+- 🚧 **Live end-to-end validation on a running Ubuntu/GNOME session** (needs a desktop
+  session; not available in CI/sandbox). First install is a bring-up — see the setup
+  guide's status note.
+- ⏳ `.deb` packaging for a one-command install.
+- ⏳ Test matrix: GNOME on Wayland and X11; browser, editor, terminal.
+- ⏳ Preedit underline styling (the `ibus_text` attribute plumbing already exists).
 
 ## Phase 3 — Fcitx5 integration ⏳
 
@@ -61,7 +71,9 @@ Legend: ✅ done · 🚧 in progress · ⏳ planned
 
 ## Immediate next steps
 
-1. Maintainer: flip the GitHub security settings listed in Phase 0.
-2. Push the foundation and confirm CI is green.
-3. Begin Phase 1: grow the scheme + add fuzzing, or jump to Phase 2 (IBus) if you
-   want end-to-end typing on Ubuntu sooner — your call.
+1. **Live bring-up of the IBus engine** on Ubuntu/GNOME: `make install`, enable the
+   input source, and type — following [ibus-setup](development/ibus-setup.md). Report
+   anything off so we can iterate to a confirmed end-to-end working state.
+2. Maintainer: flip the GitHub security settings listed in Phase 0.
+3. Push and confirm CI is green.
+4. Then: preedit underline + `.deb` packaging, or start Phase 1 scheme/fuzzing work.
