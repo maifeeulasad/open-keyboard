@@ -43,7 +43,7 @@ jobs:
           cp packaging/install.sh packaging/uninstall.sh "pkg/$NAME/"
           cp packaging/ibus/open-keyboard.xml.in "pkg/$NAME/"
           tar -C pkg -czf "dist/$NAME.tar.gz" "$NAME"
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: dist-linux
           path: dist/*
@@ -67,7 +67,7 @@ jobs:
           mkdir -p "pkg/$NAME" dist
           cp target/release/okb.exe README.md LICENSE "pkg/$NAME/"
           ( cd pkg && 7z a "../dist/$NAME.zip" "$NAME" )
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: dist-windows
           path: dist/*
@@ -96,7 +96,7 @@ jobs:
             target/aarch64-apple-darwin/release/okb
           cp README.md LICENSE "pkg/$NAME/"
           tar -C pkg -czf "dist/$NAME.tar.gz" "$NAME"
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: dist-macos
           path: dist/*
