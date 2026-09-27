@@ -167,4 +167,52 @@ mod tests {
         assert_eq!(bn("chha"), "ছা");
         assert_eq!(bn("cha"), "চা");
     }
+
+    #[test]
+    fn text_with_no_scheme_keys_passes_through_unchanged() {
+        // None of these characters are rules, so output must equal input.
+        let s = "<>[]{}()\t\n - _ =+ | \\ ~ \"'";
+        assert_eq!(PhoneticScheme::bengali().transliterate(s), s);
+    }
+
+    #[test]
+    fn transliteration_is_a_total_deterministic_function() {
+        // A std-only, reproducible fuzz: feed thousands of random strings (ASCII,
+        // Bengali-range, and arbitrary Unicode) and assert the engine never panics
+        // and always yields the same output for the same input.
+        let scheme = PhoneticScheme::bengali();
+        let mut state: u32 = 0x1234_5678;
+        let mut rng = || {
+            // xorshift32
+            state ^= state << 13;
+            state ^= state >> 17;
+            state ^= state << 5;
+            state
+        };
+
+        for _ in 0..5000 {
+            let len = (rng() % 48) as usize;
+            let input: String = (0..len)
+                .map(|_| match rng() % 10 {
+                    0..=5 => char::from(b' '.wrapping_add((rng() % 0x5f) as u8)),
+                    6 => ' ',
+                    7 => char::from_u32(0x0980 + rng() % 0x80).unwrap_or('অ'),
+                    _ => char::from_u32(rng() % 0x0011_0000)
+                        .filter(|c| !c.is_control())
+                        .unwrap_or('x'),
+                })
+                .collect();
+
+            let first = scheme.transliterate(&input);
+            let second = scheme.transliterate(&input);
+            assert_eq!(first, second, "must be deterministic for {input:?}");
+        }
+    }
+
+    #[test]
+    fn handles_very_long_input_without_issue() {
+        let input = "amar sonar bangla ".repeat(10_000);
+        let out = PhoneticScheme::bengali().transliterate(&input);
+        assert!(out.contains("আমার সোনার বাংলা"));
+    }
 }

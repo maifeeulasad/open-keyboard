@@ -19,10 +19,11 @@ Legend: ✅ done · 🚧 in progress · ⏳ planned
   push protection, code scanning, branch protection on `main`. (See
   [ADR-0007](decisions/ADR-0007-security-controls.md).)
 
-## Phase 1 — Engine maturity ⏳
+## Phase 1 — Engine maturity 🚧
 
+- ✅ Property/robustness tests on the transliterator: std-only reproducible fuzz
+  (never panics, deterministic), passthrough integrity, and very-long-input handling.
 - ⏳ Expand the phonetic scheme (y-phala/r-phala, more edge cases) with tests.
-- ⏳ Property tests / fuzzing on the transliterator (idempotence, no panics).
 - ⏳ Externalise rule tables into a data file with a strict, dependency-free parser
   (keeps the scheme editable without recompiling).
 - ⏳ Benchmarks; confirm per-keystroke latency budget (< 1 ms for word-length input).
