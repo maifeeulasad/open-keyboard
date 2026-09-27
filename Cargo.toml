@@ -1,0 +1,40 @@
+# open-keyboard — Cargo workspace
+#
+# Design principle: Rust-first, std-only core, minimal third-party dependencies.
+# Every dependency added anywhere in this workspace must be justified in
+# docs/decisions/ADR-0005-dependency-policy.md.
+[workspace]
+resolver = "3"
+members = [
+    "crates/engine",
+    "crates/cli",
+]
+
+[workspace.package]
+version = "0.0.1"
+edition = "2024"
+rust-version = "1.85"
+license = "GPL-3.0-only"
+authors = ["Maifee Ul Asad"]
+repository = "https://github.com/maifeeulasad/open-keyboard"
+homepage = "https://github.com/maifeeulasad/open-keyboard"
+readme = "README.md"
+
+# Security- and quality-oriented lints applied across the whole workspace.
+# FFI crates (added in later phases) may relax `unsafe_code` locally, with
+# every `unsafe` block documented and justified.
+[workspace.lints.rust]
+unsafe_code = "forbid"
+missing_docs = "warn"
+unused_must_use = "deny"
+
+[workspace.lints.clippy]
+all = { level = "warn", priority = -1 }
+pedantic = { level = "warn", priority = -1 }
+
+[profile.release]
+opt-level = 3
+lto = "thin"
+codegen-units = 1
+panic = "abort"
+strip = true
