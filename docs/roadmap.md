@@ -40,7 +40,9 @@ Legend: ✅ done · 🚧 in progress · ⏳ planned
 - ✅ **Live end-to-end validation on Ubuntu/GNOME (2026-09-27)** — confirmed typing
   Bengali into real applications.
 - ✅ Preedit underline styling (composing text is underlined until it commits).
-- ⏳ `.deb` packaging for a one-command install.
+- ✅ `.deb` packaging ([`build-deb.sh`](../packaging/build-deb.sh), dpkg-deb only) and a
+  tag-driven [release workflow](../.github/workflows/release.yml) publishing Linux
+  `.deb` + tarball, Windows CLI `.zip`, and macOS universal CLI `.tar.gz`.
 - ⏳ Test matrix: other distros/desktops (KDE), Wayland vs X11; browser, editor,
   terminal. (Community/device testing in progress.)
 

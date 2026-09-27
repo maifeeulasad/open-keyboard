@@ -40,7 +40,13 @@ What to type is documented in the [phonetic scheme](docs/design/phonetic-scheme.
 
 ### Type Bengali system-wide (Ubuntu/GNOME)
 
-Install the IBus engine so you can type Bengali in any app:
+Grab the latest `.deb` from [Releases](https://github.com/maifeeulasad/open-keyboard/releases):
+
+```bash
+sudo apt install ./open-keyboard_*_amd64.deb
+```
+
+Or build and install from source:
 
 ```bash
 make install
