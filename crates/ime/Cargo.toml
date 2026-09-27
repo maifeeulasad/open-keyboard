@@ -1,0 +1,20 @@
+[package]
+name = "okb-ime"
+description = "Framework-agnostic input-method session logic for open-keyboard: preedit buffer management and per-keystroke commit/passthrough policy, shared by the IBus and Fcitx5 adapters."
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+authors.workspace = true
+repository.workspace = true
+homepage.workspace = true
+readme.workspace = true
+keywords = ["input-method", "ime", "bengali", "ibus", "fcitx"]
+categories = ["text-processing", "internationalization"]
+
+[lints]
+workspace = true
+
+# Only the internal engine; still std-only otherwise (ADR-0005).
+[dependencies]
+okb-engine = { path = "../engine" }
