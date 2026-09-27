@@ -12,6 +12,9 @@ yanked = "deny"
 # rails that make an accidental heavy dependency fail CI loudly.
 multiple-versions = "warn"
 wildcards = "deny"
+# Workspace-internal crates are referenced by `{ path = ... }` (no version), which
+# cargo-deny would otherwise flag as wildcards. Allow that for path deps only.
+allow-wildcard-paths = true
 
 [licenses]
 version = 2
