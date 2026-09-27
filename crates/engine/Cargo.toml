@@ -1,0 +1,20 @@
+[package]
+name = "okb-engine"
+description = "Framework-agnostic core input engine for open-keyboard: a clean-room phonetic transliteration engine (English → Bengali) with no third-party dependencies."
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+authors.workspace = true
+repository.workspace = true
+homepage.workspace = true
+readme.workspace = true
+keywords = ["input-method", "bengali", "transliteration", "keyboard", "ime"]
+categories = ["text-processing", "internationalization"]
+
+[lints]
+workspace = true
+
+# Intentionally NO dependencies. This crate is std-only by policy.
+# See docs/decisions/ADR-0005-dependency-policy.md
+[dependencies]
