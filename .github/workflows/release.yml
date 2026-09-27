@@ -1,0 +1,122 @@
+name: Release
+
+# Runs when a version tag is pushed, e.g. `git tag v0.1.0 && git push origin v0.1.0`.
+# Builds artifacts for Linux (.deb + tarball with the IBus engine and CLI), Windows
+# (okb CLI .zip), and macOS (universal okb CLI .tar.gz), then publishes a GitHub
+# Release with all of them attached.
+#
+# Note: the system-wide IME engine is Linux/IBus only; Windows and macOS ship the
+# `okb` transliteration CLI. Native IMEs for those platforms are future phases.
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: read
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  linux:
+    name: Build Linux (.deb + tarball)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Rust
+        run: |
+          rustup toolchain install stable --profile minimal
+          rustup default stable
+      - name: Build release binaries
+        run: cargo build --release -p okb-cli -p okb-ibus
+      - name: Build .deb
+        run: packaging/build-deb.sh "${{ github.ref_name }}"
+      - name: Build tarball
+        run: |
+          VER="${GITHUB_REF_NAME#v}"
+          NAME="open-keyboard-${VER}-linux-x86_64"
+          mkdir -p "pkg/$NAME" dist
+          cp target/release/okb target/release/okb-ibus-engine "pkg/$NAME/"
+          cp README.md LICENSE "pkg/$NAME/"
+          cp packaging/install.sh packaging/uninstall.sh "pkg/$NAME/"
+          cp packaging/ibus/open-keyboard.xml.in "pkg/$NAME/"
+          tar -C pkg -czf "dist/$NAME.tar.gz" "$NAME"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist-linux
+          path: dist/*
+
+  windows:
+    name: Build Windows (CLI)
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Rust
+        run: |
+          rustup toolchain install stable --profile minimal
+          rustup default stable
+      - name: Build release CLI
+        run: cargo build --release -p okb-cli
+      - name: Package zip
+        shell: bash
+        run: |
+          VER="${GITHUB_REF_NAME#v}"
+          NAME="open-keyboard-${VER}-windows-x86_64"
+          mkdir -p "pkg/$NAME" dist
+          cp target/release/okb.exe README.md LICENSE "pkg/$NAME/"
+          ( cd pkg && 7z a "../dist/$NAME.zip" "$NAME" )
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist-windows
+          path: dist/*
+
+  macos:
+    name: Build macOS (CLI, universal)
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Rust
+        run: |
+          rustup toolchain install stable --profile minimal
+          rustup default stable
+          rustup target add x86_64-apple-darwin aarch64-apple-darwin
+      - name: Build release CLI (both arches)
+        run: |
+          cargo build --release -p okb-cli --target x86_64-apple-darwin
+          cargo build --release -p okb-cli --target aarch64-apple-darwin
+      - name: Package universal tarball
+        run: |
+          VER="${GITHUB_REF_NAME#v}"
+          NAME="open-keyboard-${VER}-macos-universal"
+          mkdir -p "pkg/$NAME" dist
+          lipo -create -output "pkg/$NAME/okb" \
+            target/x86_64-apple-darwin/release/okb \
+            target/aarch64-apple-darwin/release/okb
+          cp README.md LICENSE "pkg/$NAME/"
+          tar -C pkg -czf "dist/$NAME.tar.gz" "$NAME"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist-macos
+          path: dist/*
+
+  release:
+    name: Publish GitHub Release
+    needs: [linux, windows, macos]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # required to create the release and upload assets
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+      - name: Create release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create "${GITHUB_REF_NAME}" \
+            --repo "${GITHUB_REPOSITORY}" \
+            --title "open-keyboard ${GITHUB_REF_NAME}" \
+            --generate-notes \
+            $(find artifacts -type f | sort)
