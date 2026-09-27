@@ -7,7 +7,9 @@
 resolver = "3"
 members = [
     "crates/engine",
+    "crates/ime",
     "crates/cli",
+    "crates/ibus",
 ]
 
 [workspace.package]

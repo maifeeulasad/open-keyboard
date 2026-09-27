@@ -1,0 +1,27 @@
+[package]
+name = "okb-ibus"
+description = "IBus input-method engine for open-keyboard: a thin D-Bus adapter that drives the shared okb-ime session and speaks the IBus Engine/Factory protocol. Pure Rust (no C/glib) via zbus."
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+authors.workspace = true
+repository.workspace = true
+homepage.workspace = true
+readme.workspace = true
+keywords = ["ibus", "input-method", "bengali", "dbus", "ime"]
+categories = ["text-processing", "internationalization"]
+
+[lints]
+workspace = true
+
+[[bin]]
+name = "okb-ibus-engine"
+path = "src/main.rs"
+
+[dependencies]
+okb-ime = { path = "../ime" }
+# D-Bus transport. Pure Rust (no libibus/glib, so no C FFI and unsafe stays
+# forbidden). zvariant is used via zbus's re-export to avoid version skew.
+# Justified in docs/decisions/ADR-0005-dependency-policy.md.
+zbus = "5"
