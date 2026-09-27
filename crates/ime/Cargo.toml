@@ -11,6 +11,8 @@ homepage.workspace = true
 readme.workspace = true
 keywords = ["input-method", "ime", "bengali", "ibus", "fcitx"]
 categories = ["text-processing", "internationalization"]
+# Internal workspace crate (uses path deps); not published to crates.io yet.
+publish = false
 
 [lints]
 workspace = true

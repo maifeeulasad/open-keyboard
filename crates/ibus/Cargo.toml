@@ -11,6 +11,8 @@ homepage.workspace = true
 readme.workspace = true
 keywords = ["ibus", "input-method", "bengali", "dbus", "ime"]
 categories = ["text-processing", "internationalization"]
+# Application binary + adapter (uses path deps); not published to crates.io.
+publish = false
 
 [lints]
 workspace = true
