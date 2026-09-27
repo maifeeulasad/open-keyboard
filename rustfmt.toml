@@ -1,0 +1,4 @@
+# Formatting is enforced in CI via `cargo fmt --all --check`.
+edition = "2024"
+max_width = 100
+newline_style = "Unix"

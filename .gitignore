@@ -1,0 +1,14 @@
+# Rust build artifacts
+/target
+**/*.rs.bk
+*.pdb
+
+# Cargo — we DO commit Cargo.lock (this workspace ships binaries, and a pinned
+# lockfile is a supply-chain control). See docs/decisions/ADR-0005.
+
+# Editor / OS noise
+.idea/
+.vscode/
+*.swp
+*~
+.DS_Store
