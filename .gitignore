@@ -3,6 +3,9 @@
 **/*.rs.bk
 *.pdb
 
+# Packaging output
+/dist
+
 # Cargo — we DO commit Cargo.lock (this workspace ships binaries, and a pinned
 # lockfile is a supply-chain control). See docs/decisions/ADR-0005.
 
