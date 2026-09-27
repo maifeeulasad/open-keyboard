@@ -24,6 +24,11 @@ use zbus::zvariant::{Error, OwnedValue, Structure, StructureBuilder, Value};
 /// Result alias for the fallible structure builders.
 type Result<T> = std::result::Result<T, Error>;
 
+/// `IBusAttrType::Underline` — the attribute styles the underline of a text range.
+const ATTR_TYPE_UNDERLINE: u32 = 1;
+/// `IBusAttrUnderline::Single` — a single underline.
+const ATTR_UNDERLINE_SINGLE: u32 = 1;
+
 /// An empty `a{sv}` — the `IBusSerializable` attachment map.
 ///
 /// Returned as a concrete `HashMap` (not a `Value`) so `StructureBuilder` encodes it
@@ -45,6 +50,14 @@ pub fn attribute(kind: u32, value: u32, start: u32, end: u32) -> Result<Structur
         .add_field(start)
         .add_field(end)
         .build()
+}
+
+/// A single-underline attribute spanning characters `[start, end)`.
+///
+/// # Errors
+/// Returns an error if the D-Bus structure cannot be assembled.
+pub fn underline(start: u32, end: u32) -> Result<Structure<'static>> {
+    attribute(ATTR_TYPE_UNDERLINE, ATTR_UNDERLINE_SINGLE, start, end)
 }
 
 /// Build an `IBusAttrList` structure: `(s a{sv} av)`.
@@ -118,6 +131,22 @@ mod tests {
     fn ibus_text_has_ibus_signature() {
         let t = ibus_text("বাংলা").unwrap();
         assert_eq!(signature_of(&t), "(sa{sv}sv)");
+    }
+
+    #[test]
+    fn underline_has_expected_fields() {
+        // (name, {}, type=1 underline, value=1 single, start=0, end=5)
+        let u = Value::from(super::underline(0, 5).unwrap());
+        assert_eq!(signature_of(&u), "(sa{sv}uuuu)");
+        if let Value::Structure(s) = &u {
+            let f = s.fields();
+            assert_eq!(f[2], Value::U32(1)); // underline type
+            assert_eq!(f[3], Value::U32(1)); // single
+            assert_eq!(f[4], Value::U32(0)); // start
+            assert_eq!(f[5], Value::U32(5)); // end
+        } else {
+            panic!("underline must be a structure");
+        }
     }
 
     #[test]

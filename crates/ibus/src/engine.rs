@@ -9,7 +9,7 @@ use zbus::interface;
 use zbus::object_server::SignalEmitter;
 use zbus::zvariant::Value;
 
-use crate::ibus_text::ibus_text;
+use crate::ibus_text::{ibus_text, ibus_text_with_attrs, underline};
 use crate::keymap::map_key;
 
 /// `IBusPreeditFocusMode::Commit` — commit the preedit if focus is lost.
@@ -29,13 +29,19 @@ impl Engine {
         }
     }
 
-    /// Emit the preedit update for the current session state.
+    /// Emit the preedit update for the current session state, underlining the
+    /// composing text so it is visually distinct from committed text.
     async fn emit_preedit(emitter: &SignalEmitter<'_>, preedit: &str) {
-        let Ok(text) = ibus_text(preedit) else { return };
-        let cursor = u32::try_from(preedit.chars().count()).unwrap_or(0);
+        let len = u32::try_from(preedit.chars().count()).unwrap_or(0);
+        // Underline the whole preedit; fall back to plain text if the attribute or
+        // text cannot be built (never panic in the keystroke path).
+        let text = match underline(0, len) {
+            Ok(attr) => ibus_text_with_attrs(preedit, vec![attr]),
+            Err(_) => ibus_text(preedit),
+        };
+        let Ok(text) = text else { return };
         let visible = !preedit.is_empty();
-        let _ =
-            Engine::update_preedit_text(emitter, text, cursor, visible, PREEDIT_MODE_COMMIT).await;
+        let _ = Engine::update_preedit_text(emitter, text, len, visible, PREEDIT_MODE_COMMIT).await;
     }
 }
 
