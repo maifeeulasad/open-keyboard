@@ -21,6 +21,10 @@ Enable and maintain this baseline:
 - **CI quality gates:** `cargo fmt --check`, `cargo clippy` with `-D warnings`,
   `cargo test` ([`.github/workflows/ci.yml`](../../.github/workflows/ci.yml)).
 - **CodeQL** static analysis ([`.github/workflows/codeql.yml`](../../.github/workflows/codeql.yml)).
+  Code-scanning uploads require a **public repository or GitHub Advanced Security**;
+  the workflow is gated on repo visibility so it runs (and turns green) automatically
+  once the repo is public or GHAS is enabled, and is skipped meanwhile rather than
+  failing CI. Until then, `cargo-deny`, clippy, and tests provide the automated gates.
 - **cargo-deny** for advisories/licenses/sources/bans, on push, PR, and daily
   schedule ([`.github/workflows/security-audit.yml`](../../.github/workflows/security-audit.yml)).
 - **Dependabot** for cargo and github-actions ([`.github/dependabot.yml`](../../.github/dependabot.yml)).
