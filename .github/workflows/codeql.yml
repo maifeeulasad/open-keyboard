@@ -16,6 +16,10 @@ jobs:
   analyze:
     name: Analyze (${{ matrix.language }})
     runs-on: ubuntu-latest
+    # Dependabot PRs run with a read-only token and cannot upload code-scanning
+    # results, which makes this job fail spuriously. Skip it for those PRs; CodeQL
+    # still runs on push to main, the weekly schedule, and human PRs.
+    if: ${{ github.actor != 'dependabot[bot]' }}
     strategy:
       fail-fast: false
       matrix:
