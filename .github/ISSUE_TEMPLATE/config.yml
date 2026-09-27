@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 🔒 Security vulnerability
+    url: https://github.com/maifeeulasad/open-keyboard/security/advisories/new
+    about: Report security issues privately — never as a public issue. See SECURITY.md.
+  - name: 🗺️ Roadmap & feature planning
+    url: https://github.com/maifeeulasad/open-keyboard/blob/main/docs/roadmap.md
+    about: Planned work is tracked in the roadmap, not in issues.

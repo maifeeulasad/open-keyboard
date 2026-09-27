@@ -11,9 +11,12 @@ through GitHub issues or long-lived feature branches.
   threads. ADRs are immutable; supersede rather than edit.
 - **Work happens on `main`** in small, coherent commits. Keep `main` green: every
   commit should build and pass tests/lints.
-- **No issue tracker** for planned work. The one exception is **security**:
-  vulnerabilities are reported **privately** via GitHub Security Advisories, never as
-  public issues (see [SECURITY.md](../../SECURITY.md)).
+- **No issue tracker for planned work** — the roadmap is the plan. Two exceptions:
+  - **Bug reports** are welcome as GitHub issues (bug template), since they come from
+    users/devices we can't foresee. They report defects; they don't drive planning.
+    See [CONTRIBUTING → Reporting bugs](../../CONTRIBUTING.md#reporting-bugs).
+  - **Security** vulnerabilities are reported **privately** via GitHub Security
+    Advisories, never as public issues (see [SECURITY.md](../../SECURITY.md)).
 
 ## Commit conventions
 

@@ -19,6 +19,21 @@ before you start.
    engine. Report vulnerabilities privately (see [SECURITY.md](SECURITY.md)), not as
    public issues.
 
+## Reporting bugs
+
+Found something broken? Please open a **GitHub issue** using the bug report template
+(<https://github.com/maifeeulasad/open-keyboard/issues/new/choose>). Helpful details:
+
+- OS/distro and version, desktop environment (GNOME/KDE/…), and **Wayland or X11**.
+- Input-method framework and version (`ibus version`).
+- What you typed (the Latin input) and what you expected vs. got in Bengali.
+- Whether it reproduces in the CLI: `cargo run -p okb-cli -- <your text>`. If it does,
+  it's an engine/scheme bug; if not, it's likely transport/integration.
+
+Bug reports are the one kind of issue we use — planned work still lives in the
+[roadmap](docs/roadmap.md), and **security** problems go through
+[private reporting](SECURITY.md), never a public issue.
+
 ## Workflow
 
 We run without an issue tracker or feature branches — see
