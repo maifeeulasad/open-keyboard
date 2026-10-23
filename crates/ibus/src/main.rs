@@ -21,10 +21,13 @@ fn main() -> Result<(), Box<dyn Error>> {
     // Pure-Rust D-Bus connection to the IBus bus. Signals emitted from the exported
     // objects are dispatched by zbus's internal executor, so `main` just needs to
     // stay alive.
-    let _connection = zbus::blocking::connection::Builder::address(address.as_str())?
-        .name(names::BUS_NAME)?
-        .serve_at(names::FACTORY_PATH, Factory::default())?
-        .build()?;
+    let _connection = zbus::block_on(async {
+        zbus::connection::Builder::address(address.as_str())
+            .name(names::BUS_NAME)
+            .serve_at(names::FACTORY_PATH, Factory::default())
+            .build()
+            .await
+    })?;
 
     eprintln!(
         "okb-ibus-engine: connected to IBus, serving {} at {}",

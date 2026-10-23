@@ -24,6 +24,7 @@ path = "src/main.rs"
 [dependencies]
 okb-ime = { path = "../ime" }
 # D-Bus transport. Pure Rust (no libibus/glib, so no C FFI and unsafe stays
-# forbidden). zvariant is used via zbus's re-export to avoid version skew.
+# forbidden). zbus 6 includes the formerly standalone zvariant types and
+# avoids the unmaintained zbus 5 transitive crates.
 # Justified in docs/decisions/ADR-0005-dependency-policy.md.
-zbus = "5"
+zbus = "6"

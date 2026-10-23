@@ -26,7 +26,7 @@ footprint and security wired in from day one.
 
 ## Try it now
 
-Needs [Rust](https://rustup.rs) ≥ 1.85. Nothing else.
+Needs [Rust](https://rustup.rs) ≥ 1.89. Nothing else.
 
 ```bash
 cargo run -p okb-cli -- amar sonar bangla
