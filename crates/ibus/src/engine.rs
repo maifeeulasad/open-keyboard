@@ -5,9 +5,9 @@
 //! `UpdatePreeditText` back to the daemon.
 
 use okb_ime::Session;
+use zbus::Variant;
 use zbus::interface;
 use zbus::object_server::SignalEmitter;
-use zbus::zvariant::Value;
 
 use crate::ibus_text::{ibus_text, ibus_text_with_attrs, underline};
 use crate::keymap::map_key;
@@ -67,10 +67,10 @@ impl Engine {
 
         let response = self.session.press(key);
 
-        if let Some(committed) = response.commit {
-            if let Ok(text) = ibus_text(&committed) {
-                let _ = Engine::commit_text(&emitter, text).await;
-            }
+        if let Some(committed) = response.commit
+            && let Ok(text) = ibus_text(&committed)
+        {
+            let _ = Engine::commit_text(&emitter, text).await;
         }
         Engine::emit_preedit(&emitter, &response.preedit).await;
 
@@ -79,10 +79,10 @@ impl Engine {
 
     /// Focus lost: commit anything in progress so it is not stranded.
     async fn focus_out(&mut self, #[zbus(signal_emitter)] emitter: SignalEmitter<'_>) {
-        if let Some(committed) = self.session.flush() {
-            if let Ok(text) = ibus_text(&committed) {
-                let _ = Engine::commit_text(&emitter, text).await;
-            }
+        if let Some(committed) = self.session.flush()
+            && let Ok(text) = ibus_text(&committed)
+        {
+            let _ = Engine::commit_text(&emitter, text).await;
         }
         Engine::emit_preedit(&emitter, "").await;
     }
@@ -116,7 +116,7 @@ impl Engine {
 
     fn set_capabilities(&self, _caps: u32) {}
     fn set_cursor_location(&self, _x: i32, _y: i32, _w: i32, _h: i32) {}
-    fn set_surrounding_text(&self, _text: Value<'_>, _cursor_index: u32, _anchor_pos: u32) {}
+    fn set_surrounding_text(&self, _text: Variant<'_>, _cursor_index: u32, _anchor_pos: u32) {}
     fn property_activate(&self, _name: String, _state: u32) {}
     fn page_up(&self) {}
     fn page_down(&self) {}
@@ -128,13 +128,13 @@ impl Engine {
 
     /// Insert finished text into the focused application.
     #[zbus(signal)]
-    async fn commit_text(emitter: &SignalEmitter<'_>, text: Value<'_>) -> zbus::Result<()>;
+    async fn commit_text(emitter: &SignalEmitter<'_>, text: Variant<'_>) -> zbus::Result<()>;
 
     /// Update the underlined composition text.
     #[zbus(signal)]
     async fn update_preedit_text(
         emitter: &SignalEmitter<'_>,
-        text: Value<'_>,
+        text: Variant<'_>,
         cursor_pos: u32,
         visible: bool,
         mode: u32,

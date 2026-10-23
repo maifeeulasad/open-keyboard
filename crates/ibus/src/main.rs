@@ -46,10 +46,10 @@ fn main() -> Result<(), Box<dyn Error>> {
 /// Order: the `IBUS_ADDRESS` environment variable (set when the daemon launches us),
 /// then `ibus address` as a fallback for manual runs.
 fn ibus_address() -> Result<String, Box<dyn Error>> {
-    if let Ok(addr) = std::env::var("IBUS_ADDRESS") {
-        if !addr.is_empty() {
-            return Ok(addr);
-        }
+    if let Ok(addr) = std::env::var("IBUS_ADDRESS")
+        && !addr.is_empty()
+    {
+        return Ok(addr);
     }
 
     let output = Command::new("ibus").arg("address").output().map_err(|e| {

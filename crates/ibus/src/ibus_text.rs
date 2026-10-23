@@ -19,7 +19,7 @@
 
 use std::collections::HashMap;
 
-use zbus::zvariant::{Error, OwnedValue, Structure, StructureBuilder, Value};
+use zbus::{Error, OwnedVariant, Structure, Variant};
 
 /// Result alias for the fallible structure builders.
 type Result<T> = std::result::Result<T, Error>;
@@ -31,9 +31,9 @@ const ATTR_UNDERLINE_SINGLE: u32 = 1;
 
 /// An empty `a{sv}` — the `IBusSerializable` attachment map.
 ///
-/// Returned as a concrete `HashMap` (not a `Value`) so `StructureBuilder` encodes it
+/// Returned as a concrete `HashMap` (not a `Variant`) so `Structure::builder` encodes it
 /// as `a{sv}` rather than wrapping it in a variant.
-fn empty_attachments() -> HashMap<String, OwnedValue> {
+fn empty_attachments() -> HashMap<String, OwnedVariant> {
     HashMap::new()
 }
 
@@ -42,7 +42,7 @@ fn empty_attachments() -> HashMap<String, OwnedValue> {
 /// # Errors
 /// Returns an error if the D-Bus structure cannot be assembled.
 pub fn attribute(kind: u32, value: u32, start: u32, end: u32) -> Result<Structure<'static>> {
-    StructureBuilder::new()
+    Structure::builder()
         .add_field("IBusAttribute".to_string())
         .add_field(empty_attachments())
         .add_field(kind)
@@ -66,11 +66,11 @@ pub fn underline(start: u32, end: u32) -> Result<Structure<'static>> {
 /// Returns an error if the D-Bus structure cannot be assembled.
 pub fn attr_list(attributes: Vec<Structure<'static>>) -> Result<Structure<'static>> {
     // Each attribute becomes a variant element of the `av` array.
-    let variants: Vec<OwnedValue> = attributes
+    let variants: Vec<OwnedVariant> = attributes
         .into_iter()
-        .filter_map(|a| OwnedValue::try_from(Value::from(a)).ok())
+        .filter_map(|a| OwnedVariant::try_from(Variant::from(a)).ok())
         .collect();
-    StructureBuilder::new()
+    Structure::builder()
         .add_field("IBusAttrList".to_string())
         .add_field(empty_attachments())
         .add_field(variants)
@@ -78,11 +78,11 @@ pub fn attr_list(attributes: Vec<Structure<'static>>) -> Result<Structure<'stati
 }
 
 /// Build an `IBusText` value ready to pass as the `v` argument of `CommitText` or
-/// `UpdatePreeditText`. The returned [`Value`] has signature `(s a{sv} s v)`.
+/// `UpdatePreeditText`. The returned [`Variant`] has signature `(s a{sv} s v)`.
 ///
 /// # Errors
 /// Returns an error if the D-Bus structure cannot be assembled.
-pub fn ibus_text(text: &str) -> Result<Value<'static>> {
+pub fn ibus_text(text: &str) -> Result<Variant<'static>> {
     ibus_text_with_attrs(text, Vec::new())
 }
 
@@ -93,37 +93,37 @@ pub fn ibus_text(text: &str) -> Result<Value<'static>> {
 pub fn ibus_text_with_attrs(
     text: &str,
     attributes: Vec<Structure<'static>>,
-) -> Result<Value<'static>> {
+) -> Result<Variant<'static>> {
     let attrs = attr_list(attributes)?;
-    // Passing a `Value` field makes `StructureBuilder` encode it as a variant (`v`),
+    // Passing a `Variant` field makes `Structure::builder` encode it as a variant (`v`),
     // which is exactly the IBusText layout: the attrs field is `v` holding IBusAttrList.
-    let structure = StructureBuilder::new()
+    let structure = Structure::builder()
         .add_field("IBusText".to_string())
         .add_field(empty_attachments())
         .add_field(text.to_string())
-        .add_field(Value::from(attrs))
+        .add_field(Variant::from(attrs))
         .build()?;
-    Ok(Value::from(structure))
+    Ok(Variant::from(structure))
 }
 
 #[cfg(test)]
 mod tests {
     use super::{attr_list, attribute, ibus_text};
-    use zbus::zvariant::Value;
+    use zbus::Variant;
 
-    fn signature_of(value: &Value<'_>) -> String {
+    fn signature_of(value: &Variant<'_>) -> String {
         value.value_signature().to_string()
     }
 
     #[test]
     fn attribute_has_ibus_signature() {
-        let a = Value::from(attribute(1, 2, 0, 3).unwrap());
+        let a = Variant::from(attribute(1, 2, 0, 3).unwrap());
         assert_eq!(signature_of(&a), "(sa{sv}uuuu)");
     }
 
     #[test]
     fn attr_list_has_ibus_signature() {
-        let a = Value::from(attr_list(Vec::new()).unwrap());
+        let a = Variant::from(attr_list(Vec::new()).unwrap());
         assert_eq!(signature_of(&a), "(sa{sv}av)");
     }
 
@@ -136,14 +136,14 @@ mod tests {
     #[test]
     fn underline_has_expected_fields() {
         // (name, {}, type=1 underline, value=1 single, start=0, end=5)
-        let u = Value::from(super::underline(0, 5).unwrap());
+        let u = Variant::from(super::underline(0, 5).unwrap());
         assert_eq!(signature_of(&u), "(sa{sv}uuuu)");
-        if let Value::Structure(s) = &u {
+        if let Variant::Structure(s) = &u {
             let f = s.fields();
-            assert_eq!(f[2], Value::U32(1)); // underline type
-            assert_eq!(f[3], Value::U32(1)); // single
-            assert_eq!(f[4], Value::U32(0)); // start
-            assert_eq!(f[5], Value::U32(5)); // end
+            assert_eq!(f[2], Variant::U32(1)); // underline type
+            assert_eq!(f[3], Variant::U32(1)); // single
+            assert_eq!(f[4], Variant::U32(0)); // start
+            assert_eq!(f[5], Variant::U32(5)); // end
         } else {
             panic!("underline must be a structure");
         }
@@ -153,10 +153,10 @@ mod tests {
     fn ibus_text_carries_the_string() {
         // The 3rd field (index 2) of the IBusText structure is the text.
         let t = ibus_text("আমি").unwrap();
-        if let Value::Structure(s) = &t {
+        if let Variant::Structure(s) = &t {
             let fields = s.fields();
             match &fields[2] {
-                Value::Str(text) => assert_eq!(text.as_str(), "আমি"),
+                Variant::Str(text) => assert_eq!(text.as_str(), "আমি"),
                 other => panic!("expected text at field 2, got {other:?}"),
             }
         } else {
