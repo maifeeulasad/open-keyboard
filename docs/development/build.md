@@ -2,7 +2,7 @@
 
 ## Prerequisites
 
-- **Rust** ≥ 1.85 (edition 2024). Install via <https://rustup.rs>.
+- **Rust** ≥ 1.89 (edition 2024). Install via <https://rustup.rs>.
 - That is all you need for the current crates (`okb-engine`, `okb-cli`) — they are
   std-only.
 

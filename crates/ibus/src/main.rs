@@ -21,10 +21,13 @@ fn main() -> Result<(), Box<dyn Error>> {
     // Pure-Rust D-Bus connection to the IBus bus. Signals emitted from the exported
     // objects are dispatched by zbus's internal executor, so `main` just needs to
     // stay alive.
-    let _connection = zbus::blocking::connection::Builder::address(address.as_str())?
-        .name(names::BUS_NAME)?
-        .serve_at(names::FACTORY_PATH, Factory::default())?
-        .build()?;
+    let _connection = zbus::block_on(async {
+        zbus::connection::Builder::address(address.as_str())
+            .name(names::BUS_NAME)
+            .serve_at(names::FACTORY_PATH, Factory::default())
+            .build()
+            .await
+    })?;
 
     eprintln!(
         "okb-ibus-engine: connected to IBus, serving {} at {}",
@@ -43,10 +46,10 @@ fn main() -> Result<(), Box<dyn Error>> {
 /// Order: the `IBUS_ADDRESS` environment variable (set when the daemon launches us),
 /// then `ibus address` as a fallback for manual runs.
 fn ibus_address() -> Result<String, Box<dyn Error>> {
-    if let Ok(addr) = std::env::var("IBUS_ADDRESS") {
-        if !addr.is_empty() {
-            return Ok(addr);
-        }
+    if let Ok(addr) = std::env::var("IBUS_ADDRESS")
+        && !addr.is_empty()
+    {
+        return Ok(addr);
     }
 
     let output = Command::new("ibus").arg("address").output().map_err(|e| {
